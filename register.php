@@ -234,7 +234,7 @@ option{background:var(--bg);color:var(--fg)}
     </svg>
 
     <a class="brand" href="index.php" data-backend aria-label="oxbothost home">
-      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="8" fill="currentColor"/><circle cx="15" cy="15" r="6.5" fill="none" stroke="var(--bg)" stroke-width="2.6"/><circle cx="15" cy="15" r="2" fill="var(--bg)"/></svg>
+      <img class="brand-logo" src="assets/oxbothost-logo.svg" alt="oxbothost" width="30" height="30" loading="eager">
       <span><b>oxbothost</b></span>
     </a>
     <a class="back" href="index.php" data-backend>Back to site</a>
