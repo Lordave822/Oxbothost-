@@ -145,6 +145,157 @@ function require_login(): array {
     return $user;
 }
 
+
+function app_url(string $path = ''): string {
+    $base = rtrim((string)(app_config()['app']['base_url'] ?? ''), '/');
+    if ($base === '') {
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $base = $scheme . '://' . $host;
+    }
+    return $base . '/' . ltrim($path, '/');
+}
+
+function oauth_config(string $provider): array {
+    $oauth = app_config()['oauth'][$provider] ?? [];
+    if (empty($oauth['client_id']) || empty($oauth['client_secret'])) {
+        throw new RuntimeException(strtoupper($provider) . ' OAuth is not configured.');
+    }
+    return $oauth;
+}
+
+function oauth_state(string $provider): string {
+    $state = bin2hex(random_bytes(32));
+    $_SESSION['oauth_state'] = [
+        'provider' => $provider,
+        'value' => $state,
+        'created' => time(),
+    ];
+    return $state;
+}
+
+function verify_oauth_state(string $provider, ?string $state): bool {
+    $saved = $_SESSION['oauth_state'] ?? null;
+    unset($_SESSION['oauth_state']);
+    return is_array($saved)
+        && ($saved['provider'] ?? '') === $provider
+        && is_string($state)
+        && hash_equals((string)($saved['value'] ?? ''), $state)
+        && (time() - (int)($saved['created'] ?? 0)) <= 600;
+}
+
+function http_json(string $url, string $method = 'GET', array $headers = [], ?array $form = null): array {
+    if (!function_exists('curl_init')) {
+        throw new RuntimeException('PHP cURL is required for social login.');
+    }
+
+    $ch = curl_init($url);
+    $defaultHeaders = ['Accept: application/json'];
+    if ($form !== null) {
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($form));
+        $defaultHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
+    }
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_HTTPHEADER => array_merge($defaultHeaders, $headers),
+        CURLOPT_USERAGENT => 'Oxbothost/1.0',
+    ]);
+    $body = curl_exec($ch);
+    if ($body === false) {
+        $error = curl_error($ch);
+        curl_close($ch);
+        throw new RuntimeException('OAuth network request failed: ' . $error);
+    }
+    $status = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+    curl_close($ch);
+
+    $data = json_decode($body, true);
+    if (!is_array($data)) {
+        throw new RuntimeException('OAuth provider returned an invalid response.');
+    }
+    if ($status < 200 || $status >= 300) {
+        throw new RuntimeException('OAuth provider rejected the request.');
+    }
+    return $data;
+}
+
+function oauth_login_user(
+    string $provider,
+    string $providerUserId,
+    string $email,
+    string $name,
+    ?string $avatarUrl = null,
+    bool $emailVerified = false
+): void {
+    $email = strtolower(trim($email));
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        throw new RuntimeException('The social account did not provide a valid email address.');
+    }
+
+    $pdo = db();
+    $pdo->beginTransaction();
+    try {
+        $identity = $pdo->prepare(
+            'SELECT u.* FROM user_identities i JOIN users u ON u.id = i.user_id
+             WHERE i.provider = ? AND i.provider_user_id = ? LIMIT 1'
+        );
+        $identity->execute([$provider, $providerUserId]);
+        $user = $identity->fetch();
+
+        if (!$user) {
+            $byEmail = $pdo->prepare('SELECT * FROM users WHERE email = ? LIMIT 1');
+            $byEmail->execute([$email]);
+            $user = $byEmail->fetch();
+
+            if ($user) {
+                $link = $pdo->prepare(
+                    'INSERT INTO user_identities (user_id, provider, provider_user_id) VALUES (?,?,?)'
+                );
+                $link->execute([(int)$user['id'], $provider, $providerUserId]);
+            } else {
+                $insert = $pdo->prepare(
+                    'INSERT INTO users (name,email,password_hash,avatar_url,email_verified)
+                     VALUES (?,?,?,?,?)'
+                );
+                $insert->execute([
+                    $name !== '' ? $name : strstr($email, '@', true),
+                    $email,
+                    null,
+                    $avatarUrl,
+                    $emailVerified ? 1 : 0
+                ]);
+                $userId = (int)$pdo->lastInsertId();
+                $link = $pdo->prepare(
+                    'INSERT INTO user_identities (user_id, provider, provider_user_id) VALUES (?,?,?)'
+                );
+                $link->execute([$userId, $provider, $providerUserId]);
+                $user = $pdo->prepare('SELECT * FROM users WHERE id = ? LIMIT 1');
+                $user->execute([$userId]);
+                $user = $user->fetch();
+            }
+        }
+
+        $update = $pdo->prepare(
+            'UPDATE users SET name = ?, avatar_url = ?, email_verified = GREATEST(email_verified, ?)
+             WHERE id = ?'
+        );
+        $update->execute([$name !== '' ? $name : $user['name'], $avatarUrl, $emailVerified ? 1 : 0, (int)$user['id']]);
+
+        $pdo->commit();
+
+        $fresh = $pdo->prepare('SELECT * FROM users WHERE id = ? LIMIT 1');
+        $fresh->execute([(int)$user['id']]);
+        $user = $fresh->fetch();
+        login_user($user);
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        throw $e;
+    }
+}
+
 function logout_user(): void {
     $_SESSION = [];
     if (ini_get('session.use_cookies')) {
