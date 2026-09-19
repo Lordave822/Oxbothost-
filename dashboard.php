@@ -52,7 +52,7 @@ html{-webkit-text-size-adjust:100%}
 body{
   background:var(--bg);color:var(--fg);
   font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
 }
 a{color:inherit;-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font:inherit;color:inherit}
