@@ -8,6 +8,7 @@ $error = $_GET['error'] ?? '';
 $messages = [
     'invalid' => 'Incorrect email or password. Try again.',
     'auth' => 'Please log in to continue.',
+    'oauth' => 'We could not complete social sign-in. Please try again or use your email.'
 ];
 $notice = $messages[$error] ?? '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
