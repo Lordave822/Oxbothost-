@@ -74,11 +74,14 @@ try {
         throw new RuntimeException('GitHub did not provide a verified email address.');
     }
 
+    $displayName = trim((string)($profile['name'] ?? ''));
+    if ($displayName === '') $displayName = trim((string)($profile['login'] ?? ''));
+
     oauth_login_user(
         'github',
         (string)($profile['id'] ?? ''),
         $email,
-        (string)($profile['name'] ?: $profile['login'] ?? ''),
+        $displayName,
         isset($profile['avatar_url']) ? (string)$profile['avatar_url'] : null,
         $verified
     );
