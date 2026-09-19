@@ -1,3 +1,6 @@
 data/*.sqlite
 data/*.sqlite-*
 data/*.db
+
+# Local secrets/config
+config.php
