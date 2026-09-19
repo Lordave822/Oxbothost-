@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 phone (number as typed), password, terms.
               Your backend should build the full number from dial_code + phone
               (drop a leading 0), and validate everything again on the server.
-  2. Google / GitHub: the two buttons go to /auth/google and /auth/github
+  2. Google / GitHub: the two buttons go to oauth/google.php and oauth/github.php
               (start your OAuth flow there).
   3. Errors:  redirect back with ?error=exists (email already used) or ?error=invalid
               to show a message at the top of the form.
@@ -234,7 +234,7 @@ option{background:var(--bg);color:var(--fg)}
     </svg>
 
     <a class="brand" href="index.php" data-backend aria-label="oxbothost home">
-      <img class="brand-logo" src="assets/oxbothost-logo.svg" alt="oxbothost" width="30" height="30" loading="eager">
+      <svg class="brand-logo" width="30" height="30" viewBox="0 0 200 200" role="img" aria-label="oxbothost"><path fill="#0a0a0a" d="M100 7c-17 0-31 12-43 24C42 46 30 67 21 91c-7 19-12 36-10 52 2 18 15 29 33 36 17 7 36 10 56 10s39-3 56-10c18-7 31-18 33-36 2-16-3-33-10-52-9-24-21-45-36-60C131 19 117 7 100 7Z"/><path fill="#fff" d="M100 34c-11 0-21 8-31 18-12 13-22 30-29 50-5 13-8 25-7 35 1 9 8 15 20 20 13 5 29 7 47 7s34-2 47-7c12-5 19-11 20-20 1-10-2-22-7-35-7-20-17-37-29-50-10-10-20-18-31-18Z"/><path fill="#0a0a0a" d="M62 80c0-12 9-20 22-20h32c13 0 22 8 22 20v19c0 12-9 20-22 20H84c-13 0-22-8-22-20Z"/><path fill="#fff" d="M73 97c0-7 5-13 12-13s12 6 12 13v5H73v-5Zm30 0c0-7 5-13 12-13s12 6 12 13v5h-24v-5Z"/><path fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" d="M69 78c2-6 6-9 11-11"/></svg>
       <span><b>oxbothost</b></span>
     </a>
     <a class="back" href="index.php" data-backend>Back to site</a>
@@ -257,11 +257,11 @@ option{background:var(--bg);color:var(--fg)}
       <p class="lead">It takes a minute. Sign up with Google or GitHub, or fill in your details.</p>
 
       <div class="social">
-        <a class="btn ghost" href="/auth/google" data-backend>
+        <a class="btn ghost" href="oauth/google.php" data-backend>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg>
           Sign up with Google
         </a>
-        <a class="btn ghost" href="/auth/github" data-backend>
+        <a class="btn ghost" href="oauth/github.php" data-backend>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
           Sign up with GitHub
         </a>
@@ -271,7 +271,7 @@ option{background:var(--bg);color:var(--fg)}
 
       <?php if ($notice): ?><div id="notice" class="notice show" role="alert"><?= htmlspecialchars($notice, ENT_QUOTES, "UTF-8") ?></div><?php endif; ?>
 
-      <div class="social"><a class="btn ghost" href="/auth/google">Continue with Google</a><a class="btn ghost" href="/auth/github">Continue with GitHub</a></div><div class="or" role="separator">or create with your email</div>
+      <div class="social"><a class="btn ghost" href="oauth/google.php">Continue with Google</a><a class="btn ghost" href="oauth/github.php">Continue with GitHub</a></div><div class="or" role="separator">or create with your email</div>
 <form id="register-form" action="register.php" method="post">
         <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
 
