@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             login_user($user);
             redirect_to('dashboard.php');
         } catch (PDOException $e) {
-            if ((int)$e->errorInfo[1] === 19 || str_contains(strtolower($e->getMessage()), 'unique')) {
+            if (($e->errorInfo[0] ?? '') === '23000' || str_contains(strtolower($e->getMessage()), 'duplicate')) {
                 redirect_to('register.php?error=exists');
             }
             throw $e;
