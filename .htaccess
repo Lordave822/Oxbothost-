@@ -1,0 +1,13 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Keep config and database files out of the web.
+    RewriteRule ^(?:config(?:\.example)?\.php|auth\.php)$ - [F,L]
+    RewriteRule ^data(?:/|$) - [F,L]
+
+    # Friendly OAuth start/callback URLs.
+    RewriteRule ^auth/(google|github)/?$ oauth.php?provider=$1 [QSA,L]
+    RewriteRule ^auth/(google|github)/callback/?$ oauth.php?provider=$1&action=callback [QSA,L]
+</IfModule>
