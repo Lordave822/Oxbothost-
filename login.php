@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="page">
 <aside class="side inv">
 <svg class="rings" viewBox="0 0 650 650" aria-hidden="true" fill="none" stroke="currentColor"><circle cx="325" cy="325" r="318"/><circle cx="325" cy="325" r="255"/><circle cx="325" cy="325" r="192"/><circle cx="325" cy="325" r="129"/><circle cx="325" cy="325" r="45" fill="currentColor" stroke="none"/></svg>
-<a class="brand" href="index.php" aria-label="oxbothost home"><svg width="27" height="27" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="8" fill="currentColor"/><circle cx="15" cy="15" r="6.5" fill="none" stroke="var(--bg)" stroke-width="2.6"/><circle cx="15" cy="15" r="2" fill="var(--bg)"/></svg><span><b>oxbot</b><span>host</span></span></a>
+<a class="brand" href="index.php" aria-label="oxbothost home"><img class="brand-logo" src="assets/oxbothost-logo.svg" alt="oxbothost home" width="30" height="30" loading="eager"><span><b>oxbothost</b></span></a>
 <div class="copy"><h2>Your servers are waiting.</h2><p>Log in to manage your VPS, web hosting and domains from one dashboard.</p></div><p class="fine">&copy; 2026 oxbothost</p>
 </aside>
 <main class="main"><div class="card">
