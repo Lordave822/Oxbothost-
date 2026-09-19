@@ -41,7 +41,7 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
   background:var(--bg); color:var(--fg);
   font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  font-size:17px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased;
 }
 a{color:inherit;-webkit-tap-highlight-color:transparent}
 label,summary,.btn{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
