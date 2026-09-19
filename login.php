@@ -61,13 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="page">
 <aside class="side inv">
 <svg class="rings" viewBox="0 0 650 650" aria-hidden="true" fill="none" stroke="currentColor"><circle cx="325" cy="325" r="318"/><circle cx="325" cy="325" r="255"/><circle cx="325" cy="325" r="192"/><circle cx="325" cy="325" r="129"/><circle cx="325" cy="325" r="45" fill="currentColor" stroke="none"/></svg>
-<a class="brand" href="index.php" aria-label="oxbothost home"><img class="brand-logo" src="assets/oxbothost-logo.svg" alt="oxbothost home" width="30" height="30" loading="eager"><span><b>oxbothost</b></span></a>
+<a class="brand" href="index.php" aria-label="oxbothost home"><svg class="brand-logo" width="30" height="30" viewBox="0 0 200 200" role="img" aria-label="oxbothost"><path fill="#0a0a0a" d="M100 7c-17 0-31 12-43 24C42 46 30 67 21 91c-7 19-12 36-10 52 2 18 15 29 33 36 17 7 36 10 56 10s39-3 56-10c18-7 31-18 33-36 2-16-3-33-10-52-9-24-21-45-36-60C131 19 117 7 100 7Z"/><path fill="#fff" d="M100 34c-11 0-21 8-31 18-12 13-22 30-29 50-5 13-8 25-7 35 1 9 8 15 20 20 13 5 29 7 47 7s34-2 47-7c12-5 19-11 20-20 1-10-2-22-7-35-7-20-17-37-29-50-10-10-20-18-31-18Z"/><path fill="#0a0a0a" d="M62 80c0-12 9-20 22-20h32c13 0 22 8 22 20v19c0 12-9 20-22 20H84c-13 0-22-8-22-20Z"/><path fill="#fff" d="M73 97c0-7 5-13 12-13s12 6 12 13v5H73v-5Zm30 0c0-7 5-13 12-13s12 6 12 13v5h-24v-5Z"/><path fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" d="M69 78c2-6 6-9 11-11"/></svg><span><b>oxbothost</b></span></a>
 <div class="copy"><h2>Your servers are waiting.</h2><p>Log in to manage your VPS, web hosting and domains from one dashboard.</p></div><p class="fine">&copy; 2026 oxbothost</p>
 </aside>
 <main class="main"><div class="card">
 <h1>Log in</h1><p class="lead">Welcome back. Sign in to continue.</p>
 <?php if ($notice): ?><div class="notice" role="alert"><?= htmlspecialchars($notice, ENT_QUOTES, 'UTF-8') ?></div><?php endif; ?>
-<div class="social"><a class="btn ghost" href="/auth/google">Continue with Google</a><a class="btn ghost" href="/auth/github">Continue with GitHub</a></div>
+<div class="social"><a class="btn ghost" href="oauth/google.php">Continue with Google</a><a class="btn ghost" href="oauth/github.php">Continue with GitHub</a></div>
 <div class="or" role="separator">or use your email</div>
 <form method="post" action="login.php">
 <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
