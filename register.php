@@ -271,7 +271,8 @@ option{background:var(--bg);color:var(--fg)}
 
       <?php if ($notice): ?><div id="notice" class="notice show" role="alert"><?= htmlspecialchars($notice, ENT_QUOTES, "UTF-8") ?></div><?php endif; ?>
 
-      <form id="register-form" action="register.php" method="post">
+      <div class="social"><a class="btn ghost" href="/auth/google">Continue with Google</a><a class="btn ghost" href="/auth/github">Continue with GitHub</a></div><div class="or" role="separator">or create with your email</div>
+<form id="register-form" action="register.php" method="post">
         <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
 
         <div class="field">
