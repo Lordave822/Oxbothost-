@@ -235,9 +235,9 @@ option{background:var(--bg);color:var(--fg)}
 
     <a class="brand" href="index.php" data-backend aria-label="oxbothost home">
       <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="8" fill="currentColor"/><circle cx="15" cy="15" r="6.5" fill="none" stroke="var(--bg)" stroke-width="2.6"/><circle cx="15" cy="15" r="2" fill="var(--bg)"/></svg>
-      <span><b>oxbot</b><span>host</span></span>
+      <span><b>oxbothost</b></span>
     </a>
-    <a class="back" href="index.html" data-backend>Back to site</a>
+    <a class="back" href="index.php" data-backend>Back to site</a>
 
     <div class="copy">
       <h2>Start with a $4 VPS.</h2>
@@ -271,7 +271,7 @@ option{background:var(--bg);color:var(--fg)}
 
       <?php if ($notice): ?><div id="notice" class="notice show" role="alert"><?= htmlspecialchars($notice, ENT_QUOTES, "UTF-8") ?></div><?php endif; ?>
 
-      <form id="register-form" action="/register" method="post">
+      <form id="register-form" action="register.php" method="post">
         <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
 
         <div class="field">
@@ -533,7 +533,7 @@ option{background:var(--bg);color:var(--fg)}
 <script>
 (function () {
   // Set to false once the form action and OAuth links above point at your live backend.
-  var DEMO = true;
+  var DEMO = false;
 
   document.documentElement.classList.add('js');
   var form = document.getElementById('register-form');
