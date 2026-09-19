@@ -1,3 +1,17 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/auth.php';
+$user = require_login();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'logout') {
+    if (verify_csrf($_POST['csrf'] ?? null)) {
+        logout_user();
+        redirect_to('login.php');
+    }
+    http_response_code(400);
+    exit('Invalid request.');
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
