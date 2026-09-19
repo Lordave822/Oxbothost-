@@ -277,7 +277,7 @@ details p{padding:0 0 24px;color:var(--muted);max-width:60ch}
 <header class="nav">
   <input class="sr" type="checkbox" id="nav-toggle" aria-label="Toggle menu">
   <div class="wrap nav-row">
-    <a class="brand" href="#top" aria-label="oxbothost home"><img class="brand-logo" src="assets/oxbothost-logo.svg" alt="oxbothost" width="30" height="30" loading="eager"><span><b>oxbothost</b></span></a>
+    <a class="brand" href="#top" aria-label="oxbothost home"><svg class="brand-logo" width="30" height="30" viewBox="0 0 200 200" role="img" aria-label="oxbothost"><path fill="#0a0a0a" d="M100 7c-17 0-31 12-43 24C42 46 30 67 21 91c-7 19-12 36-10 52 2 18 15 29 33 36 17 7 36 10 56 10s39-3 56-10c18-7 31-18 33-36 2-16-3-33-10-52-9-24-21-45-36-60C131 19 117 7 100 7Z"/><path fill="#fff" d="M100 34c-11 0-21 8-31 18-12 13-22 30-29 50-5 13-8 25-7 35 1 9 8 15 20 20 13 5 29 7 47 7s34-2 47-7c12-5 19-11 20-20 1-10-2-22-7-35-7-20-17-37-29-50-10-10-20-18-31-18Z"/><path fill="#0a0a0a" d="M62 80c0-12 9-20 22-20h32c13 0 22 8 22 20v19c0 12-9 20-22 20H84c-13 0-22-8-22-20Z"/><path fill="#fff" d="M73 97c0-7 5-13 12-13s12 6 12 13v5H73v-5Zm30 0c0-7 5-13 12-13s12 6 12 13v5h-24v-5Z"/><path fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" d="M69 78c2-6 6-9 11-11"/></svg><span><b>oxbothost</b></span></a>
     <nav class="links" aria-label="Main">
       <a href="#pricing">Products</a><a href="#domains">Domains</a><a href="#features">Why oxbothost</a><a href="#faq">FAQ</a>
     </nav>
@@ -382,7 +382,7 @@ details p{padding:0 0 24px;color:var(--muted);max-width:60ch}
       <a class="btn ghost" href="login.php">Talk to sales</a>
     </div>
     <div class="foot-grid">
-      <div><a class="brand" href="#top"><img class="brand-logo" src="assets/oxbothost-logo.svg" alt="oxbothost" width="30" height="30" loading="eager"><span><b>oxbothost</b></span></a><p class="blurb">VPS, web hosting, domains and dedicated servers.</p></div>
+      <div><a class="brand" href="#top"><svg class="brand-logo" width="30" height="30" viewBox="0 0 200 200" role="img" aria-label="oxbothost"><path fill="#0a0a0a" d="M100 7c-17 0-31 12-43 24C42 46 30 67 21 91c-7 19-12 36-10 52 2 18 15 29 33 36 17 7 36 10 56 10s39-3 56-10c18-7 31-18 33-36 2-16-3-33-10-52-9-24-21-45-36-60C131 19 117 7 100 7Z"/><path fill="#fff" d="M100 34c-11 0-21 8-31 18-12 13-22 30-29 50-5 13-8 25-7 35 1 9 8 15 20 20 13 5 29 7 47 7s34-2 47-7c12-5 19-11 20-20 1-10-2-22-7-35-7-20-17-37-29-50-10-10-20-18-31-18Z"/><path fill="#0a0a0a" d="M62 80c0-12 9-20 22-20h32c13 0 22 8 22 20v19c0 12-9 20-22 20H84c-13 0-22-8-22-20Z"/><path fill="#fff" d="M73 97c0-7 5-13 12-13s12 6 12 13v5H73v-5Zm30 0c0-7 5-13 12-13s12 6 12 13v5h-24v-5Z"/><path fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" d="M69 78c2-6 6-9 11-11"/></svg><span><b>oxbothost</b></span></a><p class="blurb">VPS, web hosting, domains and dedicated servers.</p></div>
       <div><h4>Products</h4><ul><li><a href="#pricing">VPS</a></li><li><a href="#pricing">Web hosting</a></li><li><a href="#domains">Domains</a></li><li><a href="#pricing">Dedicated servers</a></li></ul></div><div><h4>Company</h4><ul><li><a href="#top">About</a></li><li><a href="#top">Contact</a></li><li><a href="#top">Status</a></li></ul></div><div><h4>Legal</h4><ul><li><a href="#top">Terms</a></li><li><a href="#top">Privacy</a></li></ul></div>
     </div>
     <p class="legal">&copy; 2026 oxbothost. All rights reserved.</p>
