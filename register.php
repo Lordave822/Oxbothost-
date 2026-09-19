@@ -1,3 +1,57 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/auth.php';
+
+if (current_user()) redirect_to('dashboard.php');
+
+$error = $_GET['error'] ?? '';
+$messages = [
+    'exists' => 'That email already has an account. Try logging in instead.',
+    'invalid' => 'Please check your details and try again.',
+];
+$notice = $messages[$error] ?? '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verify_csrf($_POST['csrf'] ?? null)) {
+        $notice = 'Your session expired. Please refresh and try again.';
+    } else {
+        $name = trim((string)($_POST['name'] ?? ''));
+        $email = strtolower(trim((string)($_POST['email'] ?? '')));
+        $country = strtoupper(trim((string)($_POST['country'] ?? '')));
+        $dial = preg_replace('/[^0-9]/', '', (string)($_POST['dial_code'] ?? ''));
+        $phone = trim((string)($_POST['phone'] ?? ''));
+        $password = (string)($_POST['password'] ?? '');
+        $terms = isset($_POST['terms']);
+
+        $phoneDigits = preg_replace('/[^0-9]/', '', $phone);
+        $valid = strlen($name) >= 2 && strlen($name) <= 80
+            && filter_var($email, FILTER_VALIDATE_EMAIL)
+            && preg_match('/^[A-Z]{2}$/', $country)
+            && preg_match('/^[0-9]{1,4}$/', $dial)
+            && strlen($phoneDigits) >= 6 && strlen($phoneDigits) <= 18
+            && strlen($password) >= 8 && strlen($password) <= 128
+            && $terms;
+
+        if (!$valid) {
+            redirect_to('register.php?error=invalid');
+        }
+
+        try {
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = db()->prepare('INSERT INTO users (name,email,country,dial_code,phone,password_hash) VALUES (?,?,?,?,?,?)');
+            $stmt->execute([$name, $email, $country, $dial, $phoneDigits, $hash]);
+            $user = db()->query('SELECT * FROM users WHERE id = ' . (int)db()->lastInsertId())->fetch();
+            login_user($user);
+            redirect_to('dashboard.php');
+        } catch (PDOException $e) {
+            if ((int)$e->errorInfo[1] === 19 || str_contains(strtolower($e->getMessage()), 'unique')) {
+                redirect_to('register.php?error=exists');
+            }
+            throw $e;
+        }
+    }
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -14,7 +68,7 @@
   Save it as register.html next to index.html and login.html.
 
   HOW TO CONNECT THIS PAGE TO YOUR BACKEND
-  1. Form:    <form action="/register" method="post"> posts these fields:
+  1. Form:    <form action="register.php" method="post"> posts these fields:
                 name, email, country (2-letter code like NG), dial_code (like 234),
                 phone (number as typed), password, terms.
               Your backend should build the full number from dial_code + phone
@@ -23,7 +77,7 @@
               (start your OAuth flow there).
   3. Errors:  redirect back with ?error=exists (email already used) or ?error=invalid
               to show a message at the top of the form.
-  4. Last step: in the script at the bottom, change  var DEMO = true;  to  false.
+  4. Last step: in the script at the bottom, change  var DEMO = false;  to  false.
               While DEMO is true nothing is sent, buttons only show a preview message.
   Add a hidden CSRF token input inside the form if your backend uses one.
 -->
@@ -52,7 +106,7 @@ html{-webkit-text-size-adjust:100%}
 body{
   background:var(--bg);color:var(--fg);
   font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;
 }
 a{color:inherit;-webkit-tap-highlight-color:transparent}
 button,input,select{font:inherit;color:inherit}
@@ -159,7 +213,7 @@ option{background:var(--bg);color:var(--fg)}
   .main{align-items:flex-start;padding-top:32px}
 }
 @media (max-width:480px){
-  body{font-size:16px}
+  body{font-size:14px}
   .social{margin-top:26px}
   .or{margin:22px 0}
   .dial{min-width:72px;padding:0 10px}
@@ -179,7 +233,7 @@ option{background:var(--bg);color:var(--fg)}
       <circle cx="380" cy="380" r="52" fill="currentColor" stroke="none"/>
     </svg>
 
-    <a class="brand" href="index.html" data-backend aria-label="oxbothost home">
+    <a class="brand" href="index.php" data-backend aria-label="oxbothost home">
       <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="8" fill="currentColor"/><circle cx="15" cy="15" r="6.5" fill="none" stroke="var(--bg)" stroke-width="2.6"/><circle cx="15" cy="15" r="2" fill="var(--bg)"/></svg>
       <span><b>oxbot</b><span>host</span></span>
     </a>
@@ -215,10 +269,10 @@ option{background:var(--bg);color:var(--fg)}
 
       <div class="or" role="separator">or use your email</div>
 
-      <div id="notice" class="notice" role="alert"></div>
+      <?php if ($notice): ?><div id="notice" class="notice show" role="alert"><?= htmlspecialchars($notice, ENT_QUOTES, "UTF-8") ?></div><?php endif; ?>
 
       <form id="register-form" action="/register" method="post">
-        <!-- add a hidden CSRF token input here if your backend uses one -->
+        <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
 
         <div class="field">
           <div class="label-row"><label for="name">Full name</label></div>
@@ -470,7 +524,7 @@ option{background:var(--bg);color:var(--fg)}
         <div class="submit-row"><button class="btn" type="submit">Create account</button></div>
       </form>
 
-      <p class="alt">Already have an account? <a href="login.html" data-backend>Log in</a></p>
+      <p class="alt">Already have an account? <a href="login.php" data-backend>Log in</a></p>
     </div>
   </main>
 
